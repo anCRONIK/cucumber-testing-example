@@ -17,4 +17,6 @@ public class NoteDto {
     private String text;
 
     private LocalDateTime dateCreated;
+
+    private boolean edited;
 }
