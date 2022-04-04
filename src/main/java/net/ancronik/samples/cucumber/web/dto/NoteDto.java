@@ -1,5 +1,6 @@
 package net.ancronik.samples.cucumber.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class NoteDto {
 
     private String text;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateCreated;
 
     private boolean edited;

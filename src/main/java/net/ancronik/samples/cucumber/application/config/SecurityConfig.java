@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/register", "/login", "/actuator/health").permitAll()
+                .mvcMatchers("/register", "/login", "/actuator/health", "/documentation", "/swagger-ui/index.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic(Customizer.withDefaults());

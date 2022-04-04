@@ -1,5 +1,7 @@
 package net.ancronik.samples.cucumber;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import net.ancronik.samples.cucumber.data.model.Author;
 import net.ancronik.samples.cucumber.data.model.Note;
 import net.ancronik.samples.cucumber.data.repository.AuthorRepository;
@@ -18,6 +20,7 @@ import java.util.Set;
  * @author Nikola Presecki
  */
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "Testing API", version = "1.0", description = "API example for testing with Cucumber"))
 public class SpringBootApp {
 
     public static void main(String[] args) {

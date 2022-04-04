@@ -19,7 +19,9 @@ Application uses H2 in memory database and data is not persisted. On each startu
 
 # API documentation
 
-TODO: swagger doc
+API documentation is available on path `/documentation`.
+
+There is also Swagger UI which you can use to test the API on path `/swagger-ui/index.html`.
 
 ## API Response format
 
@@ -53,10 +55,3 @@ All tests must have the __tag__ which is used as group by surefire and failsafe 
 - Cucumber as testing framework
 - run with `mvn clean verify -P acceptance-test -D...`
 - to run them from IDEA you need to use `AcceptanceTestRunner` class and provide needed VM variables.
-
-To run acceptance tests, you need to provide following system properties:
-
-| property           | description                                                           |
-|--------------------|-----------------------------------------------------------------------|
-| __cassandra_host__ | ip or hostname of the cassandra instance that can be used for testing |
-| __cassandra_port__ | port on which Cassandra instance is listening                         |
