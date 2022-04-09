@@ -1,5 +1,8 @@
+import { Footer } from 'components/Footer/Footer';
+import { AppHeader } from 'components/Header/Header';
+import { NavBar } from 'containers/Navbar/Navbar';
 import React from 'react';
-import { NoteList } from './components/ApiResponse/NoteList';
+import { MediaContextProvider, mediaStyles } from 'styles/AppMedia';
 
 const notes = [
   { id: 1, text: 'test', dateCreated: '2022-04-08 14:54:11', edited: false },
@@ -11,12 +14,23 @@ const notes = [
   },
 ];
 
-function App() {
-  return (
-    <div className="App">
-      <NoteList notes={notes} />
-    </div>
-  );
-}
+const leftItems = [{ as: 'a', content: 'Home', key: 'home' }];
+const rightItems = [
+  { as: 'a', content: 'Login', key: 'login' },
+  { as: 'a', content: 'Register', key: 'register' },
+];
+
+const App = () => (
+  <>
+    <style>{mediaStyles}</style>
+
+    <MediaContextProvider>
+      <NavBar leftItems={leftItems} rightItems={rightItems}>
+        <AppHeader />
+      </NavBar>
+      <Footer />
+    </MediaContextProvider>
+  </>
+);
 
 export default App;
