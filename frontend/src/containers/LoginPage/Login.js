@@ -9,7 +9,7 @@ import {
   Segment,
 } from 'semantic-ui-react';
 
-const LoginForm = () => (
+const LoginPage = () => (
   <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle">
     <Grid.Column style={{ maxWidth: 450 }}>
       <Header as="h2" color="teal" textAlign="center">
@@ -21,7 +21,7 @@ const LoginForm = () => (
             fluid
             icon="user"
             iconPosition="left"
-            placeholder="E-mail address"
+            placeholder="Username"
           />
           <Form.Input
             fluid
@@ -43,4 +43,4 @@ const LoginForm = () => (
   </Grid>
 );
 
-export default LoginForm;
+export default LoginPage;

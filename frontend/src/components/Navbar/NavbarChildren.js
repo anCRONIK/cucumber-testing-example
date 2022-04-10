@@ -1,5 +1,11 @@
 import { Container } from 'semantic-ui-react';
+import styled from 'styled-components';
 
 export const NavBarChildren = (props) => (
-  <Container style={{ marginTop: '5em' }}>{props.children}</Container>
+  <ChildrenContainer>{props.children}</ChildrenContainer>
 );
+
+const ChildrenContainer = styled(Container)`
+  margin-top: 5em;
+  min-height: 100vh;
+`;

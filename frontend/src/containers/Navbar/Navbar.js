@@ -2,7 +2,9 @@ import { NavBarChildren } from 'components/Navbar/NavbarChildren';
 import { NavBarDesktop } from 'components/Navbar/NavbarDesktop';
 import { NavBarMobile } from 'components/Navbar/NavbarMobile';
 import React from 'react';
+import styled from 'styled-components';
 import { Media } from 'styles/AppMedia';
+import backgroundImg from 'assets/background.png';
 
 export class NavBar extends React.Component {
   state = {
@@ -22,7 +24,7 @@ export class NavBar extends React.Component {
     const { visible } = this.state;
 
     return (
-      <div>
+      <NavbarDiv>
         <Media at="mobile">
           <NavBarMobile
             leftItems={leftItems}
@@ -39,7 +41,13 @@ export class NavBar extends React.Component {
           <NavBarDesktop leftItems={leftItems} rightItems={rightItems} />
           <NavBarChildren>{children}</NavBarChildren>
         </Media>
-      </div>
+      </NavbarDiv>
     );
   }
 }
+
+const NavbarDiv = styled.div`
+  background-image: url(${backgroundImg});
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+`;

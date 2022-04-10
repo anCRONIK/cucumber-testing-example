@@ -1,8 +1,11 @@
 import { Footer } from 'components/Footer/Footer';
 import { AppHeader } from 'components/Header/Header';
 import { NavBar } from 'containers/Navbar/Navbar';
-import React from 'react';
+import React, { useState } from 'react';
 import { MediaContextProvider, mediaStyles } from 'styles/AppMedia';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LoginPage from 'containers/LoginPage/Login';
+import { HomePage } from 'containers/HomePage/Home';
 
 const notes = [
   { id: 1, text: 'test', dateCreated: '2022-04-08 14:54:11', edited: false },
@@ -14,23 +17,33 @@ const notes = [
   },
 ];
 
-const leftItems = [{ as: 'a', content: 'Home', key: 'home' }];
-const rightItems = [
-  { as: 'a', content: 'Login', key: 'login' },
-  { as: 'a', content: 'Register', key: 'register' },
-];
+const menuItems = [{ as: 'a', content: 'Notes', key: 'note' }];
 
-const App = () => (
-  <>
-    <style>{mediaStyles}</style>
+const App = () => {
+  const [token, setToken] = useState();
 
-    <MediaContextProvider>
-      <NavBar leftItems={leftItems} rightItems={rightItems}>
-        <AppHeader />
-      </NavBar>
-      <Footer />
-    </MediaContextProvider>
-  </>
-);
+  if (!token) {
+    return <LoginPage setToken={setToken} />;
+  }
+
+  return (
+    <>
+      <style>{mediaStyles}</style>
+
+      <MediaContextProvider>
+        <NavBar leftItems={menuItems}>
+          <AppHeader />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/notes" element={<HomePage />} />
+            </Routes>
+          </BrowserRouter>
+        </NavBar>
+        <Footer />
+      </MediaContextProvider>
+    </>
+  );
+};
 
 export default App;

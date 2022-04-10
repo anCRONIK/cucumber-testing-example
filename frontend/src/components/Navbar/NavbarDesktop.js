@@ -1,4 +1,5 @@
-import { Image, Menu } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
+import { NavbarLogo } from './NavbarLogo';
 
 export const NavBarDesktop = (props) => {
   const { leftItems, rightItems } = props;
@@ -6,7 +7,7 @@ export const NavBarDesktop = (props) => {
   return (
     <Menu fixed="top" inverted>
       <Menu.Item>
-        <Image size="mini" src="https://react.semantic-ui.com/logo.png" />
+        <NavbarLogo />
       </Menu.Item>
 
       {leftItems.map((item) => (
@@ -14,9 +15,8 @@ export const NavBarDesktop = (props) => {
       ))}
 
       <Menu.Menu position="right">
-        {rightItems.map((item) => (
-          <Menu.Item {...item} />
-        ))}
+        {rightItems != null &&
+          rightItems.map((item) => <Menu.Item {...item} />)}
       </Menu.Menu>
     </Menu>
   );
