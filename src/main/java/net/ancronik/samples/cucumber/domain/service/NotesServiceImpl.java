@@ -9,12 +9,14 @@ import net.ancronik.samples.cucumber.data.model.Note;
 import net.ancronik.samples.cucumber.data.repository.AuthorRepository;
 import net.ancronik.samples.cucumber.data.repository.NoteRepository;
 import net.ancronik.samples.cucumber.domain.mapper.Mapper;
+import net.ancronik.samples.cucumber.domain.util.JwtTokenUtil;
 import net.ancronik.samples.cucumber.web.dto.CreateNoteRequest;
 import net.ancronik.samples.cucumber.web.dto.NoteDto;
 import net.ancronik.samples.cucumber.web.dto.UpdateNoteRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -35,11 +37,14 @@ public class NotesServiceImpl implements NotesService {
 
     private final Mapper<Note, NoteDto> notesToNotesDtoMapper;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @Autowired
-    public NotesServiceImpl(NoteRepository noteRepository, AuthorRepository authorRepository, Mapper<Note, NoteDto> notesToNotesDtoMapper) {
+    public NotesServiceImpl(NoteRepository noteRepository, AuthorRepository authorRepository, Mapper<Note, NoteDto> notesToNotesDtoMapper, JwtTokenUtil jwtTokenUtil) {
         this.noteRepository = noteRepository;
         this.authorRepository = authorRepository;
         this.notesToNotesDtoMapper = notesToNotesDtoMapper;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
 
@@ -97,6 +102,7 @@ public class NotesServiceImpl implements NotesService {
     }
 
     private String getLoggedInUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //FIXME extract to another service
         return ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
     }

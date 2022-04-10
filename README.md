@@ -10,9 +10,26 @@ Also, user can edit and delete existing note.
 
 # Security
 
-API endpoints are secured with basic user authentication. For authentication, you can use default user(author):
+API endpoints are secured with JWT. To get the token you need to make `POST` request to the `/authenticate` with payload:
+```json
+{
+  "username": "<username>",
+  "password": "<password>"
+}
+```
+For authentication, you can use default user(author):
 - username: `user`
 - password: `user`
+
+Response is in JSON format:
+```json
+{
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjQ5NjYzNzQwLCJpYXQiOjE2NDk1NzczNDB9.29i2K0okk-lUBJajQ8G5oSCSop4X-i83Xnlg7CUSFavHzdhvqm816sHUIPOKT0I3YHN-lXe0LI50MERVyYa6Ng"
+}
+```
+
+After the token is received you need to include it in you requests. For that use `Authorization` header that should look like:
+`Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjQ5NjYzNzQwLCJpYXQiOjE2NDk1NzczNDB9.29i2K0okk-lUBJajQ8G5oSCSop4X-i83Xnlg7CUSFavHzdhvqm816sHUIPOKT0I3YHN-lXe0LI50MERVyYa6Ng`
 
 # Storage
 Application uses H2 in memory database and data is not persisted. On each startup application will populate database with some initial data.

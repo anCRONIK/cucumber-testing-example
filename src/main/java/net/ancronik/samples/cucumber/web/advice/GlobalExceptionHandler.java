@@ -1,14 +1,18 @@
 package net.ancronik.samples.cucumber.web.advice;
 
+import io.jsonwebtoken.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.ancronik.samples.cucumber.application.exception.DataDoesNotExistException;
+import net.ancronik.samples.cucumber.application.exception.UnauthorizedActionException;
 import net.ancronik.samples.cucumber.web.dto.ApiErrorResponse;
 import net.ancronik.samples.cucumber.web.dto.ValidationFailedResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +36,19 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class, UnauthorizedActionException.class, SignatureException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ApiErrorResponse> authenticationExceptionsHandler(Exception e, WebRequest request) {
+        LOG.error("Unathorized exception {}", request, e);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ApiErrorResponse(
+                        "Unathorized",
+                        e.getMessage(),
+                        LocalDateTime.now(ZoneId.of("UTC"))
+                )
+        );
+    }
 
     /**
      * Handler for exceptions thrown when requested data does not exist.
