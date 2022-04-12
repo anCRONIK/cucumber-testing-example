@@ -7,10 +7,11 @@ import lombok.*;
  *
  * @author Nikola Presečki
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @EqualsAndHashCode
 public class JwtResponse {
 
-	private final String token;
+	private String token;
 }

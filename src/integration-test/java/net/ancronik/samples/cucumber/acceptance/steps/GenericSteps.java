@@ -1,13 +1,15 @@
 package net.ancronik.samples.cucumber.acceptance.steps;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import net.ancronik.samples.cucumber.acceptance.AbstractSteps;
-import net.ancronik.samples.cucumber.acceptance.HeaderSettingRequestCallback;
-import net.ancronik.samples.cucumber.acceptance.ResponseResultErrorHandler;
-import net.ancronik.samples.cucumber.acceptance.ResponseResults;
+import net.ancronik.samples.cucumber.acceptance.*;
+import net.ancronik.samples.cucumber.data.model.Author;
+import net.ancronik.samples.cucumber.data.model.Note;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,6 +34,15 @@ public class GenericSteps extends AbstractSteps {
     public void checkTheStatusCode(int statusCode) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponse().getStatusCode();
         assertEquals(statusCode, currentStatusCode.value());
+    }
+
+    @Given( "^there are (\\d+) random notes in database$" )
+    public void insertRandomNotes(int count){
+        Author author = authorRepository.findByUsername("user").orElseThrow();
+        List<Note> notes = DataGenerator.generateRandomNotes(count, author);
+
+        noteRepository.deleteAll();
+        noteRepository.saveAll(notes);
     }
 
 }

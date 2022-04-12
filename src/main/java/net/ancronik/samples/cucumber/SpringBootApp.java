@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import net.ancronik.samples.cucumber.data.model.Author;
 import net.ancronik.samples.cucumber.data.model.Note;
 import net.ancronik.samples.cucumber.data.repository.AuthorRepository;
+import net.ancronik.samples.cucumber.data.repository.NoteRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,13 +29,13 @@ public class SpringBootApp {
     }
 
     @Bean
-    public ApplicationRunner initializer(AuthorRepository repository, PasswordEncoder passwordEncoder) {
+    public ApplicationRunner initializer(AuthorRepository authorRepository, PasswordEncoder passwordEncoder, NoteRepository noteRepository) {
         Author testAuthor = new Author(null, "user", passwordEncoder.encode("user"), null, null);
-        testAuthor.setNotes(Set.of(new Note(null, "some defaultNote", null, false, testAuthor)));
+        authorRepository.save(testAuthor);
+        noteRepository.save(new Note(null, "some defaultNote", null, false, testAuthor));
 
-        return args -> repository.saveAll(Arrays.asList(
-                new Author(null, "random", passwordEncoder.encode("random"), null, null),
-                testAuthor
+        return args -> authorRepository.saveAll(Arrays.asList(
+                new Author(null, "random", passwordEncoder.encode("random"), null, null)
         ));
     }
 

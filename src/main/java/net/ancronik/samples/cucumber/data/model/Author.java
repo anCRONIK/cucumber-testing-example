@@ -48,7 +48,7 @@ public class Author {
     private LocalDateTime dateRegistered;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinTable(
             name = "author_notes",
             joinColumns = @JoinColumn(name = "author"),
