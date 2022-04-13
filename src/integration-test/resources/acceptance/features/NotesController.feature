@@ -5,7 +5,8 @@ Feature: Notes controller testing
     When user is fetching all notes
     Then fetched notes count is 10
 
-    Scenario: Fetching first note from database
-      Given at least 1 note exists in database
-      When user fetches first note
-      Then fetched notes count is 1
+    Scenario: Fetching note by id
+      Given there are notes in database
+      And random note id is selected
+      When user fetches note with selected id
+      Then received data matches selected note

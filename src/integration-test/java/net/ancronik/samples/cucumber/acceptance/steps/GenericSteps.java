@@ -1,11 +1,14 @@
 package net.ancronik.samples.cucumber.acceptance.steps;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import net.ancronik.samples.cucumber.acceptance.*;
 import net.ancronik.samples.cucumber.data.model.Author;
 import net.ancronik.samples.cucumber.data.model.Note;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
@@ -17,17 +20,7 @@ public class GenericSteps extends AbstractSteps {
 
     @When("^the client calls (.+) with http method (.+)$")
     public void theClientCallsApi(String path, String method) {
-        final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(generateDefaultHttpHeaders());
-        final ResponseResultErrorHandler errorHandler = new ResponseResultErrorHandler();
-
-        testRestTemplate.getRestTemplate().setErrorHandler(errorHandler);
-        latestResponse = testRestTemplate.execute(path, HttpMethod.valueOf(method), requestCallback, response -> {
-            if (errorHandler.hadError) {
-                return (errorHandler.getResults());
-            } else {
-                return (new ResponseResults(response));
-            }
-        });
+       makeApiCall(path, method, null);
     }
 
     @Then("^the client receives status code of (\\d+)$")
@@ -36,13 +29,28 @@ public class GenericSteps extends AbstractSteps {
         assertEquals(statusCode, currentStatusCode.value());
     }
 
-    @Given( "^there are (\\d+) random notes in database$" )
-    public void insertRandomNotes(int count){
-        Author author = authorRepository.findByUsername("user").orElseThrow();
+    @Given("^there are (\\d+) random notes in database$")
+    public void insertRandomNotes(int count) {
+       // noteRepository.deleteAll();
+        //FIXME not working as expected, cascade problem?
+        Author author = authorRepository.findByUsername(TEST_USER).orElseThrow();
         List<Note> notes = DataGenerator.generateRandomNotes(count, author);
 
-        noteRepository.deleteAll();
         noteRepository.saveAll(notes);
+    }
+
+    @Given("^there are notes in database$")
+    public void checkThereAreNotesInDbAndGenerateIfNot() {
+        if (noteRepository.count() < 1) {
+            insertRandomNotes(2);
+        }
+    }
+
+    @And("^random note id is selected$")
+    public void selectRandomNote(){
+        Note note = noteRepository.findAll().iterator().next();
+        scenarioContext.setContext(Context.NOTE_ID, note.getId());
+        scenarioContext.setContext(Context.NOTE, note);
     }
 
 }

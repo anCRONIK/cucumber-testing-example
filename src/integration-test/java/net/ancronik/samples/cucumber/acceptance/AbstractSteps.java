@@ -7,6 +7,7 @@ import net.ancronik.samples.cucumber.web.dto.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ public class AbstractSteps {
 
     @Autowired
     protected NoteRepository noteRepository;
+
+    protected static ScenarioContext scenarioContext = new ScenarioContext();
 
 
     protected Map<String, String> generateDefaultHttpHeaders() {
@@ -51,5 +54,20 @@ public class AbstractSteps {
         JwtResponse jwtResponse = testRestTemplate.postForObject("/authenticate", jwtRequest, JwtResponse.class);
 
         return jwtResponse.getToken();
+    }
+
+    protected void makeApiCall(String path, String method, String payload) {
+        final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(generateDefaultHttpHeaders());
+        requestCallback.setBody(payload);
+        final ResponseResultErrorHandler errorHandler = new ResponseResultErrorHandler();
+
+        testRestTemplate.getRestTemplate().setErrorHandler(errorHandler);
+        latestResponse = testRestTemplate.execute(path, HttpMethod.valueOf(method), requestCallback, response -> {
+            if (errorHandler.hadError) {
+                return (errorHandler.getResults());
+            } else {
+                return (new ResponseResults(response));
+            }
+        });
     }
 }
