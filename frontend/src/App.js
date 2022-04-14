@@ -1,46 +1,62 @@
 import { Footer } from 'components/Footer/Footer';
 import { AppHeader } from 'components/Header/Header';
+import { NotesPage } from 'containers/NotesPage/NotesPage';
+import { LandingPage } from 'containers/LandingPage/LandingPage';
+import { LoginPage } from 'containers/LoginPage/Login';
 import { NavBar } from 'containers/Navbar/Navbar';
-import React, { useState } from 'react';
-import { MediaContextProvider, mediaStyles } from 'styles/AppMedia';
+import Protected from 'containers/Protected';
+import { AuthProvider } from 'context/authProvider';
+import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import LoginPage from 'containers/LoginPage/Login';
-import { HomePage } from 'containers/HomePage/Home';
+import { MediaContextProvider, mediaStyles } from 'styles/AppMedia';
 
-const notes = [
-  { id: 1, text: 'test', dateCreated: '2022-04-08 14:54:11', edited: false },
-  {
-    id: 2,
-    text: 'jako veliki text',
-    dateCreated: '2022-04-08 11:22:11',
-    edited: true,
-  },
+const menuItems = [{ as: 'a', content: 'Notes', key: 'note', href: '/notes' }];
+const loginItems = [
+  { as: 'a', content: 'Login', key: 'login', href: '/login' },
+];
+const logoutItems = [
+  { as: 'a', content: 'Logout', key: 'logout', href: '/logout' },
 ];
 
-const menuItems = [{ as: 'a', content: 'Notes', key: 'note' }];
-
 const App = () => {
-  const [token, setToken] = useState();
-
-  if (!token) {
-    return <LoginPage setToken={setToken} />;
-  }
+  let user = localStorage.getItem('user');
+  user = JSON.parse(user);
 
   return (
     <>
       <style>{mediaStyles}</style>
 
       <MediaContextProvider>
-        <NavBar leftItems={menuItems}>
-          <AppHeader />
+        <AuthProvider userData={user}>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/notes" element={<HomePage />} />
-            </Routes>
+            <NavBar
+              leftItems={menuItems}
+              rightItems={
+                user && user.token && user.token !== ''
+                  ? logoutItems
+                  : loginItems
+              }
+            >
+              <AppHeader />
+
+              <Routes>
+                <Route path="/" element={<LandingPage />} exact />
+                <Route
+                  path="/notes"
+                  element={
+                    <Protected
+                      isLoggedIn={user && user.token && user.token !== ''}
+                    >
+                      <NotesPage />
+                    </Protected>
+                  }
+                />
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </NavBar>
           </BrowserRouter>
-        </NavBar>
-        <Footer />
+          <Footer />
+        </AuthProvider>
       </MediaContextProvider>
     </>
   );

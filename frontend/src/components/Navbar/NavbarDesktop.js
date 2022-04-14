@@ -10,9 +10,7 @@ export const NavBarDesktop = (props) => {
         <NavbarLogo />
       </Menu.Item>
 
-      {leftItems.map((item) => (
-        <Menu.Item {...item} />
-      ))}
+      {leftItems != null && leftItems.map((item) => <Menu.Item {...item} />)}
 
       <Menu.Menu position="right">
         {rightItems != null &&

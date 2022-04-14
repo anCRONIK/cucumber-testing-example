@@ -1,10 +1,10 @@
+import backgroundImg from 'assets/background.png';
 import { NavBarChildren } from 'components/Navbar/NavbarChildren';
 import { NavBarDesktop } from 'components/Navbar/NavbarDesktop';
 import { NavBarMobile } from 'components/Navbar/NavbarMobile';
 import React from 'react';
 import styled from 'styled-components';
 import { Media } from 'styles/AppMedia';
-import backgroundImg from 'assets/background.png';
 
 export class NavBar extends React.Component {
   state = {

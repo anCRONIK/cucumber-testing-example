@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getAuthorizationHeader from './authentication-service';
+import getAuthorizationHeader from './authService';
 
 const API_URL = process.env.BACKEND_API_URL + '/notes';
 class NotesService {
