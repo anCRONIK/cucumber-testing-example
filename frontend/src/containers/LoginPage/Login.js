@@ -1,34 +1,86 @@
-import React from 'react';
+import useAuth from 'hooks/useAuth';
+import { React, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Grid, Segment } from 'semantic-ui-react';
+import AuthenticationService from 'services/authService';
 import styled from 'styled-components';
-import { handleFormSubmit } from './LoginLogic';
 
-export const LoginPage = () => (
-  <LoginDiv>
-    <Grid.Column>
-      <LoginHeader>Log-in to your account</LoginHeader>
-      <Form size="large">
-        <Segment stacked>
-          <Form.Input
-            fluid
-            icon="user"
-            iconPosition="left"
-            placeholder="Username"
-          />
-          <Form.Input
-            fluid
-            icon="lock"
-            iconPosition="left"
-            placeholder="Password"
-            type="password"
-          />
+export function LoginPage() {
+  const navigate = useNavigate();
 
-          <LoginButton onClick={handleFormSubmit}>Login</LoginButton>
-        </Segment>
-      </Form>
-    </Grid.Column>
-  </LoginDiv>
-);
+  const errRef = useRef();
+
+  const [user, setUser] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+
+  useEffect(() => {
+    //  userRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    setErrMsg('');
+  }, [user, pwd]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = AuthenticationService.login(user, pwd);
+      console.log(JSON.stringify(response));
+      setUser('');
+      setPwd('');
+      navigate('/notes', { replace: true });
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg('No Server Response');
+      } else if (err.response?.status === 400) {
+        setErrMsg('Missing Username or Password');
+      } else if (err.response?.status === 401) {
+        setErrMsg('Unauthorized');
+      } else {
+        setErrMsg('Login Failed');
+      }
+      errRef.current.focus();
+    }
+  };
+
+  return (
+    <LoginDiv>
+      <Grid.Column>
+        <p
+          ref={errRef}
+          className={errMsg ? 'errmsg' : 'offscreen'}
+          aria-live="assertive"
+        >
+          {errMsg}
+        </p>
+        <LoginHeader>Log-in to your account</LoginHeader>
+        <Form size="large" onSubmit={handleSubmit}>
+          <Segment stacked>
+            <Form.Input
+              fluid
+              icon="user"
+              iconPosition="left"
+              placeholder="Username"
+              onChange={(e) => setUser(e.target.value)}
+            />
+            <Form.Input
+              fluid
+              icon="lock"
+              iconPosition="left"
+              placeholder="Password"
+              type="password"
+              onChange={(e) => setPwd(e.target.value)}
+            />
+
+            <LoginButton>Login</LoginButton>
+          </Segment>
+        </Form>
+      </Grid.Column>
+    </LoginDiv>
+  );
+}
 
 const LoginDiv = styled.div`
   display: flex;

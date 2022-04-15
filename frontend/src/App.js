@@ -1,21 +1,33 @@
 import { Footer } from 'components/Footer/Footer';
 import { AppHeader } from 'components/Header/Header';
-import { NotesPage } from 'containers/NotesPage/NotesPage';
 import { LandingPage } from 'containers/LandingPage/LandingPage';
 import { LoginPage } from 'containers/LoginPage/Login';
 import { NavBar } from 'containers/Navbar/Navbar';
+import { NotesPage } from 'containers/NotesPage/NotesPage';
 import Protected from 'containers/Protected';
 import { AuthProvider } from 'context/authProvider';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AuthenticationService from 'services/authService';
 import { MediaContextProvider, mediaStyles } from 'styles/AppMedia';
 
 const menuItems = [{ as: 'a', content: 'Notes', key: 'note', href: '/notes' }];
 const loginItems = [
   { as: 'a', content: 'Login', key: 'login', href: '/login' },
 ];
+
+function logoutF() {
+  AuthenticationService.logout();
+  window.location.href = '/';
+}
+
 const logoutItems = [
-  { as: 'a', content: 'Logout', key: 'logout', href: '/logout' },
+  {
+    as: 'button',
+    content: 'Logout',
+    key: 'logout',
+    onClick: logoutF,
+  },
 ];
 
 const App = () => {
@@ -52,6 +64,7 @@ const App = () => {
                   }
                 />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="*" element={<div>No page</div>} />
               </Routes>
             </NavBar>
           </BrowserRouter>

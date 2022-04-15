@@ -1,4 +1,5 @@
 import React from 'react';
+import { NoteList } from 'components/ApiResponse/NoteList';
 
 const notes = [
   { id: 1, text: 'test', dateCreated: '2022-04-08 14:54:11', edited: false },
@@ -11,5 +12,5 @@ const notes = [
 ];
 
 export const NotesPage = () => {
-  return <div>Notes</div>;
+  return <NoteList notes={notes} />;
 };

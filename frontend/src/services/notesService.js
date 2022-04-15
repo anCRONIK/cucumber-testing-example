@@ -1,7 +1,7 @@
 import axios from 'axios';
 import getAuthorizationHeader from './authService';
 
-const API_URL = process.env.BACKEND_API_URL + '/notes';
+const API_URL = process.env.REACT_APP_BACKEND_API_URL + '/notes';
 class NotesService {
   getNotes() {
     return axios.get(API_URL);

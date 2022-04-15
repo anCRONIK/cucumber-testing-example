@@ -1,5 +1,4 @@
 import { React } from 'react';
-import { Label } from 'semantic-ui-react';
 import { Note } from './Note';
 
 export const NoteList = (props) => {
